@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CollectWaste - Sistem Pelaporan Sampah</title>
+  <meta name="description" content="CollectWaste adalah sistem pelaporan sampah untuk mendukung pemantauan kondisi kebersihan area, rekapitulasi laporan, dan penyediaan informasi edukasi." />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <div class="noise"></div>
+
+    <header class="topbar">
+      <div class="container">
+        <nav class="nav" aria-label="Navigasi utama">
+          <a href="#home" class="brand" data-route="home">
+            <div class="brand-mark">
+              <img alt="Logo CollectWaste" src="logo.png" width="2000" height="1414" />
+            </div>
+            <div class="brand-copy">
+              <strong>CollectWaste</strong>
+              <span>Sistem pelaporan sampah pekerja</span>
+            </div>
+          </a>
+
+          <div class="nav-links desktop-only">
+            <a href="#home" class="nav-link active" data-route="home">Beranda</a>
+            <a href="#pelaporan" class="nav-link" data-route="pelaporan">Pelaporan</a>
+            <a href="#rekapitulasi" class="nav-link" data-route="rekapitulasi">Rekapitulasi</a>
+            <a href="#news" class="nav-link" data-route="news">Berita</a>
+            <a href="#edukasi" class="nav-link" data-route="edukasi">Edukasi</a>
+          </div>
+
+          <div class="nav-actions">
+            <button class="btn btn-primary desktop-only" data-go="pelaporan">Formulir Pelaporan</button>
+            <button class="menu-btn" id="menuToggle" aria-label="Buka menu">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              </svg>
+            </button>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="mobile-sheet">
+        <button class="nav-link active" data-route="home">Beranda <span>&#8599;</span></button>
+        <button class="nav-link" data-route="pelaporan">Pelaporan <span>&#8599;</span></button>
+        <button class="nav-link" data-route="rekapitulasi">Rekapitulasi <span>&#8599;</span></button>
+        <button class="nav-link" data-route="news">Berita <span>&#8599;</span></button>
+        <button class="nav-link" data-route="edukasi">Edukasi <span>&#8599;</span></button>
+        <div style="display:grid; gap:10px; margin-top:12px;">
+          <button class="btn btn-primary" data-go="pelaporan">Formulir Pelaporan</button>
+          <button class="btn btn-secondary" data-go="rekapitulasi">Lihat Rekapitulasi</button>
+        </div>
+      </div>
+    </div>
+
+    <main class="main">
+      <div class="container">
+        <section id="homePage" class="page active" data-page="home">
+          <div class="home-stack">
+            <section class="section-card reveal visible">
+              <div class="hero-marketing">
+                <div class="hero-marketing-card">
+                  <span class="soft-badge">Sistem informasi kebersihan area</span>
+                  <h1>Sistem Pelaporan dan Pemantauan Sampah pada Area Gudang dan Logistik</h1>
+                  <p>CollectWaste menyediakan sarana pelaporan, pemantauan, dan penyajian data kebersihan area bagi masyarakat dan pengelola wilayah.</p>
+                  <div class="hero-actions">
+                    <button class="btn btn-primary" type="button" data-go="pelaporan">Buka Pelaporan</button>
+                    <button class="btn btn-secondary" type="button" data-go="rekapitulasi">Lihat Rekapitulasi</button>
+                    <a class="btn btn-ghost" href="mailto:hello@collectwaste.id">Kontak</a>
+                  </div>
+                  <div class="hero-badges">
+                    <span class="soft-badge">Formulir pelaporan</span>
+                    <span class="soft-badge">Denah status area</span>
+                    <span class="soft-badge">Rekapitulasi wilayah</span>
+                  </div>
+                </div>
+
+                <div class="hero-proof">
+                  <div class="proof-panel">
+                    <div class="section-head" style="margin-bottom:0;">
+                      <div>
+                        <h2>Fungsi Operasional</h2>
+                        <p>Halaman utama menampilkan fungsi inti sistem: pelaporan, pemantauan area, dan ringkasan data.</p>
+                      </div>
+                    </div>
+                    <div class="proof-grid">
+                      <div class="proof-card">
+                        <span>Formulir</span>
+                        <strong>Data inti terstruktur</strong>
+                        <p>Formulir memuat lokasi, volume, dampak, dan dokumentasi.</p>
+                      </div>
+                      <div class="proof-card">
+                        <span>Status area</span>
+                        <strong>Indikator visual</strong>
+                        <p>Kondisi area ditampilkan dengan penanda hijau, kuning, dan merah.</p>
+                      </div>
+                      <div class="proof-card">
+                        <span>Prioritas</span>
+                        <strong>Berdasarkan data laporan</strong>
+                        <p>Prioritas penanganan ditentukan dari volume dan dampak laporan.</p>
+                      </div>
+                      <div class="proof-card">
+                        <span>Kolaborasi</span>
+                        <strong>Satu sumber informasi</strong>
+                        <p>Data yang sama digunakan pada pelaporan dan rekapitulasi.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="quote-card">
+                    <span class="soft-badge">Catatan Operasional</span>
+                    <blockquote>"Keseragaman data membantu penentuan prioritas penanganan area."</blockquote>
+                    <div class="quote-meta">
+                      <strong>Ringkasan Evaluasi</strong>
+                      <span>Pemantauan operasional lapangan</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+          <section class="section-card reveal">
+            <div class="section-head">
+              <div>
+                <h2>Gambaran Umum CollectWaste</h2>
+                <p>Sistem ini mendukung pelaporan, pemantauan, dan tindak lanjut titik sampah.</p>
+              </div>
+            </div>
+            <div class="home-two-col">
+              <article class="home-copy-card">
+                <span class="soft-badge">Gambaran Umum</span>
+                <h3>Sistem terpadu untuk pelaporan, pemantauan, dan edukasi kebersihan area.</h3>
+                <p>CollectWaste mengintegrasikan formulir pelaporan, denah status area, rekapitulasi wilayah, dan materi edukasi dalam satu sistem.</p>
+                <p>Penyajian data yang terpusat membantu penetapan prioritas penanganan area.</p>
+              </article>
+
+              <article class="benefit-card">
+                <span class="soft-badge">Fungsi Utama</span>
+                <div class="summary-list">
+                  <div class="summary-row">
+                    <span>Penerimaan laporan</span>
+                    <strong>Formulir terstruktur dan ringkas</strong>
+                  </div>
+                  <div class="summary-row">
+                    <span>Koordinasi area</span>
+                    <strong>Status area tersaji secara konsisten</strong>
+                  </div>
+                  <div class="summary-row">
+                    <span>Prioritas penanganan</span>
+                    <strong>Berdasarkan volume dan dampak</strong>
+                  </div>
+                  <div class="summary-row">
+                    <span>Informasi publik</span>
+                    <strong>Materi edukasi dan berita tersedia</strong>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="section-card reveal">
+            <div class="section-head">
+              <div>
+                <h2>Fitur unggulan</h2>
+                <p>Enam fungsi utama untuk pelaporan, pemantauan, dan penyampaian informasi.</p>
+              </div>
+            </div>
+            <div class="grid grid-3">
+              <article class="feature-detail-card">
+                <span class="soft-badge">01</span>
+                <h3>Pelaporan terstruktur</h3>
+                <p>Titik denah, volume, dampak, dan foto dicatat dalam satu formulir.</p>
+              </article>
+              <article class="feature-detail-card">
+                <span class="soft-badge">02</span>
+                <h3>Denah status area</h3>
+                <p>Penanda warna memudahkan pembacaan persebaran kondisi area.</p>
+              </article>
+              <article class="feature-detail-card">
+                <span class="soft-badge">03</span>
+                <h3>Rekapitulasi otomatis</h3>
+                <p>Laporan aktif membentuk ringkasan wilayah tanpa pengolahan manual tambahan.</p>
+              </article>
+              <article class="feature-detail-card">
+                <span class="soft-badge">04</span>
+                <h3>Prioritas penanganan</h3>
+                <p>Volume dan dampak membantu penentuan urutan tindak lanjut.</p>
+              </article>
+              <article class="feature-detail-card">
+                <span class="soft-badge">05</span>
+                <h3>Arsip dokumentasi</h3>
+                <p>Dokumentasi laporan tersimpan bersama lokasi dan waktu kejadian.</p>
+              </article>
+              <article class="feature-detail-card">
+                <span class="soft-badge">06</span>
+                <h3>Edukasi dan informasi publik</h3>
+                <p>Materi edukasi dan berita mendukung penyampaian informasi terkait pengelolaan sampah.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="section-card reveal">
+            <div class="section-head">
+              <div>
+                <h2>Ringkasan Statistik</h2>
+                <p>Indikator utama berikut disusun dari data laporan yang tersedia.</p>
+              </div>
+            </div>
+            <div class="grid grid-4">
+              <article class="stat-card">
+                <span>Laporan aktif</span>
+                <strong data-counter="reports">0</strong>
+                <p>Menjadi dasar pemantauan area.</p>
+              </article>
+              <article class="stat-card">
+                <span>Area termonitor</span>
+                <strong data-counter="areas">0</strong>
+                <p>Wilayah yang dipetakan berdasarkan laporan yang masuk.</p>
+              </article>
+              <article class="stat-card">
+                <span>Area aman terkendali</span>
+                <strong data-counter="greenAreas">0</strong>
+                <p>Menunjukkan area dengan status aman atau terkendali.</p>
+              </article>
+              <article class="stat-card">
+                <span>Area prioritas tinggi</span>
+                <strong data-counter="criticalAreas">0</strong>
+                <p>Menunjukkan area dengan status prioritas tinggi.</p>
+              </article>
+            </div>
+
+            <div class="logo-strip" style="margin-top:18px;">
+              <span class="logo-chip">Komunitas lingkungan</span>
+              <span class="logo-chip">Kelurahan</span>
+              <span class="logo-chip">Bank sampah</span>
+              <span class="logo-chip">Sekolah</span>
+              <span class="logo-chip">Tim operasional</span>
+            </div>
+
+            <div class="grid grid-2" style="margin-top:18px;">
+              <article class="quote-card">
+                <span class="soft-badge">Catatan</span>
+                <blockquote>"Data laporan membantu membedakan area dengan frekuensi laporan tinggi dan area dengan prioritas penanganan tinggi."</blockquote>
+                <div class="quote-meta">
+                  <strong>Pengelolaan Area</strong>
+                  <span>Pemantauan data pelaporan</span>
+                </div>
+              </article>
+              <article class="quote-card">
+                <span class="soft-badge">Catatan</span>
+                <blockquote>"Struktur data yang seragam memudahkan proses pencatatan dan tindak lanjut laporan."</blockquote>
+                <div class="quote-meta">
+                  <strong>Koordinasi Pelaporan</strong>
+                  <span>Pengelolaan informasi lapangan</span>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="section-card reveal">
+            <div class="section-head">
+              <div>
+                <h2>Alur Proses</h2>
+                <p>Tiga tahapan utama dari pencatatan laporan hingga hasil rekap.</p>
+              </div>
+            </div>
+            <div class="steps">
+              <div class="step-card">
+                <span class="step-number">01</span>
+                <div class="step-icon">Laporan</div>
+                <h3>Input laporan</h3>
+                <p>Pekerja mencatat lokasi, volume, dampak, dan dokumentasi sampah.</p>
+              </div>
+              <div class="step-card">
+                <span class="step-number">02</span>
+                <div class="step-icon">Rekap</div>
+                <h3>Rekap data</h3>
+                <p>Laporan yang masuk diringkas untuk melihat status dan prioritas area.</p>
+              </div>
+              <div class="step-card">
+                <span class="step-number">03</span>
+                <div class="step-icon">Hasil</div>
+                <h3>Hasil pemantauan</h3>
+                <p>Hasil rekap digunakan sebagai dasar tindak lanjut area gudang dan logistik.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="section-card reveal">
+            <div class="section-head">
+              <div>
+                <h2>Akses Halaman</h2>
+                <p>Halaman utama berikut tersedia untuk pelaporan, rekapitulasi, berita, dan edukasi.</p>
+              </div>
+            </div>
+            <div class="grid grid-4">
+              <article class="highlight-card">
+                <span class="soft-badge">Pelaporan</span>
+                <h3>Formulir Pelaporan</h3>
+                <p>Penyampaian laporan dilakukan melalui formulir yang memuat data inti.</p>
+                <button class="btn btn-secondary" type="button" data-go="pelaporan">Buka Pelaporan</button>
+              </article>
+              <article class="highlight-card">
+                <span class="soft-badge">Rekapitulasi</span>
+                <h3>Rekapitulasi Area</h3>
+                <p>Ringkasan area, denah titik, dan tren laporan tersedia pada halaman ini.</p>
+                <button class="btn btn-secondary" type="button" data-go="rekapitulasi">Lihat Rekapitulasi</button>
+              </article>
+              <article class="highlight-card">
+                <span class="soft-badge">Berita</span>
+                <h3>Berita Lingkungan</h3>
+                <p>Halaman ini memuat informasi dan perkembangan terkait pengelolaan sampah.</p>
+                <button class="btn btn-secondary" type="button" data-go="news">Buka Berita</button>
+              </article>
+              <article class="highlight-card">
+                <span class="soft-badge">Edukasi</span>
+                <h3>Materi Edukasi</h3>
+                <p>Materi edukasi tersedia untuk mendukung pemahaman pengelolaan sampah.</p>
+                <button class="btn btn-secondary" type="button" data-go="edukasi">Buka Edukasi</button>
+              </article>
+            </div>
+          </section>
+
+          <section class="section-card reveal">
+            <div class="home-cta">
+              <div>
+                <span class="soft-badge">Navigasi</span>
+                <h2>Akses Formulir Pelaporan dan Rekapitulasi Area</h2>
+                <p>Menu berikut menyediakan akses ke formulir pelaporan dan rekapitulasi area.</p>
+              </div>
+              <div class="simple-inline-actions">
+                <button class="btn btn-primary" type="button" data-go="pelaporan">Buka Pelaporan</button>
+                <button class="btn btn-secondary" type="button" data-go="rekapitulasi">Lihat Rekapitulasi</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="section-card reveal">
+            <div class="section-head">
+              <div>
+                <h2>Pertanyaan Umum</h2>
+                <p>Informasi umum mengenai fungsi sistem.</p>
+              </div>
+            </div>
+            <div class="accordion">
+              <details class="simple-details" open>
+                <summary>Apakah sistem memerlukan pelatihan khusus?</summary>
+                <div class="simple-details-body">
+                  <p class="summary">Tidak. Alur utama disusun secara ringkas agar dapat dipahami oleh pengguna.</p>
+                </div>
+              </details>
+              <details class="simple-details">
+                <summary>Siapa pengguna yang sesuai?</summary>
+                <div class="simple-details-body">
+                  <p class="summary">Sistem dapat digunakan oleh komunitas lingkungan, pengurus wilayah, bank sampah, sekolah, dan unit operasional kebersihan.</p>
+                </div>
+              </details>
+              <details class="simple-details">
+                <summary>Apakah laporan masuk ke rekapitulasi area secara otomatis?</summary>
+                <div class="simple-details-body">
+                  <p class="summary">Ya. Data laporan digunakan untuk membentuk denah titik, indikator area, dan ringkasan wilayah.</p>
+                </div>
+              </details>
+              <details class="simple-details">
+                <summary>Apakah tersedia materi edukasi?</summary>
+                <div class="simple-details-body">
+                  <p class="summary">Tersedia. Halaman Berita dan Edukasi memuat informasi pendukung terkait pengelolaan sampah.</p>
+                </div>
+              </details>
+            </div>
+          </section>
+        </section>
+
+        <section id="reportPage" class="page" data-page="pelaporan">
+          <div class="section-card reveal visible">
+            <div class="page-header">
+              <div>
+                <div class="breadcrumb">Beranda / Pelaporan</div>
+                <h2>Pelaporan Sampah</h2>
+                <p>Formulir ini memuat titik denah, kondisi sampah, dan dokumentasi untuk mendukung pemetaan titik laporan dan rekapitulasi area.</p>
+              </div>
+              <span class="soft-badge">Formulir Pelaporan</span>
+            </div>
+
+            <div class="report-layout report-simple-layout">
+              <form class="report-form" id="reportForm" novalidate>
+                <input id="reportTime" name="waktu" type="hidden" />
+
+                <div class="report-quick-note">
+                  <strong>Data Wajib</strong>
+                  <p>Data wajib meliputi titik denah, kondisi sampah, jenis sampah, risiko khusus, nama pelapor, nomor telepon atau email, dan sekurang-kurangnya satu foto.</p>
+                </div>
+
+                <section class="form-section compact">
+                  <div class="form-section-head">
+                    <div class="section-step">01</div>
+                    <div>
+                      <h3>Identitas pelapor</h3>
+                      <p>Isi nama dan kontak pelapor untuk memudahkan verifikasi laporan.</p>
+                    </div>
+                  </div>
+
+                  <div class="field-grid">
+                    <div class="field">
+                      <div class="label-row">
+                        <label for="reporterName">Nama pelapor</label>
+                        <span class="helper">Wajib</span>
+                      </div>
+                      <input class="control" id="reporterName" name="pelaporNama" type="text" placeholder="Nama lengkap" required />
+                      <div class="error-text" data-error="pelaporNama"></div>
+                    </div>
+                    <div class="field">
+                      <div class="label-row">
+                        <label for="reporterContact">Nomor telepon atau email</label>
+                        <span class="helper">Wajib</span>
+                      </div>
+                      <input class="control" id="reporterContact" name="pelaporKontak" type="text" placeholder="0812xxxx atau email@contoh.id" required />
+                      <div class="error-text" data-error="pelaporKontak"></div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="form-section compact">
+                  <div class="form-section-head">
+                    <div class="section-step">02</div>
+                    <div>
+                      <h3>Informasi lokasi</h3>
+                      <p>Tentukan titik pada denah gudang dan logistik.</p>
+                    </div>
+                  </div>
+
+                  <div class="location-map-card">
+                    <div class="map-toolbar">
+                      <div>
+                        <strong style="display:block; margin-bottom:4px;">Tentukan titik lokasi pada denah</strong>
+                        <p class="summary">Pilih titik pada denah gudang dan logistik.</p>
+                      </div>
+                      <button type="button" class="btn btn-secondary" id="detectLocationBtn">Titik Tengah Denah</button>
+                    </div>
+
+                    <div class="map-reference-grid">
+                      <div class="map-picker-stack">
+                        <div class="report-map facility-map" id="reportMap" aria-label="Denah lokasi untuk memilih titik laporan">
+                          <img class="facility-map-image" src="image.png" alt="Denah area gudang dan logistik" draggable="false" />
+                          <span class="pin green" id="reportMapPin" data-label="Titik laporan" hidden></span>
+                        </div>
+                        <div class="field-grid single">
+                          <div class="field">
+                            <div class="label-row">
+                              <label for="coordinateReadout">Titik denah</label>
+                              <span class="helper">Diisi otomatis</span>
+                            </div>
+                            <div class="coordinate-readout" id="coordinateReadout">Belum ada titik denah.</div>
+                            <div class="error-text" data-error="koordinat"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <figure class="facility-legend" aria-label="Keterangan denah fasilitas operasional">
+                        <img src="keterangan denah.png" alt="Keterangan denah fasilitas operasional" loading="lazy" />
+                      </figure>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="form-section compact">
+                  <div class="form-section-head">
+                    <div class="section-step">03</div>
+                    <div>
+                      <h3>Kondisi sampah</h3>
+                      <p>Pilih kondisi sampah, jenis sampah, dan risiko khusus yang sesuai dengan kondisi di lokasi.</p>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <div class="label-row">
+                      <label>Kondisi sampah</label>
+                    </div>
+                    <div class="segmented" id="conditionPicker">
+                      <button type="button" class="segment sedikit" data-condition="sedikit">
+                        <strong>Sedikit</strong>
+                      </button>
+                      <button type="button" class="segment sedang" data-condition="sedang">
+                        <strong>Sedang</strong>
+                      </button>
+                      <button type="button" class="segment banyak" data-condition="banyak">
+                        <strong>Banyak</strong>
+                      </button>
+                    </div>
+                    <input type="hidden" id="reportVolume" name="volume" />
+                    <div class="error-text" data-error="volume"></div>
+                  </div>
+
+                  <div class="field-grid">
+                    <div class="field">
+                      <div class="label-row">
+                        <label for="reportWasteType">Jenis sampah</label>
+                        <span class="helper">Wajib</span>
+                      </div>
+                      <select class="select" id="reportWasteType" name="jenisSampah">
+                        <option value="">Pilih jenis sampah</option>
+                        <option value="Plastik">Plastik</option>
+                        <option value="Organik">Organik</option>
+                        <option value="Campuran">Campuran</option>
+                        <option value="B3">B3</option>
+                        <option value="Lainnya">Lainnya</option>
+                      </select>
+                      <div class="error-text" data-error="jenisSampah"></div>
+                    </div>
+                    <div class="field">
+                      <div class="label-row">
+                        <label for="reportImpact">Risiko khusus</label>
+                        <span class="helper">Wajib</span>
+                      </div>
+                      <select class="select" id="reportImpact" name="dampak">
+                        <option value="">Pilih risiko khusus</option>
+                        <option value="Tidak mengganggu">Tidak mengganggu</option>
+                        <option value="Mengganggu jalan">Mengganggu jalan</option>
+                        <option value="Menyumbat drainase">Menyumbat drainase</option>
+                        <option value="Bau menyengat">Bau menyengat</option>
+                        <option value="Berbahaya">Berbahaya</option>
+                      </select>
+                      <div class="error-text" data-error="dampak"></div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="form-section compact">
+                  <div class="form-section-head">
+                    <div class="section-step">04</div>
+                    <div>
+                      <h3>Dokumentasi</h3>
+                      <p>Unggah sekurang-kurangnya satu foto. Lebih dari satu foto dapat ditambahkan bila tersedia.</p>
+                    </div>
+                  </div>
+
+                  <div class="field full">
+                    <div class="label-row">
+                      <label for="reportPhoto">Unggah foto</label>
+                      <span class="helper">Dapat lebih dari satu foto</span>
+                    </div>
+                    <div class="upload-area" id="uploadArea">
+                      <input class="hidden-visually" id="reportPhoto" name="dokumentasi" type="file" accept="image/*" multiple />
+                      <div class="upload-box">
+                        <div class="upload-icon">&#128248;</div>
+                        <div>
+                          <strong style="display:block; margin-bottom:6px;">Pilih foto atau seret ke area ini</strong>
+                          <p class="summary">Foto yang jelas mendukung verifikasi laporan.</p>
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="pickFileBtn">Pilih Foto</button>
+                      </div>
+                    </div>
+                    <div class="error-text" data-error="dokumentasi"></div>
+                    <div class="upload-preview" id="uploadPreview"></div>
+                  </div>
+                </section>
+
+                <details class="simple-details" id="optionalDetails">
+                  <summary>Informasi Tambahan</summary>
+                  <div class="simple-details-body">
+                    <div class="auto-time-card">
+                      <div>
+                        <strong style="display:block; margin-bottom:4px;">Waktu pelaporan tercatat otomatis</strong>
+                        <p class="summary">Bagian ini terisi otomatis.</p>
+                      </div>
+                      <span class="soft-badge" id="reportTimeBadge">-</span>
+                    </div>
+
+                    <label class="toggle-card" id="differentTimeCard">
+                      <input id="differentTimeToggle" type="checkbox" />
+                      <div>
+                        <strong>Waktu kejadian berbeda dengan waktu pelaporan</strong>
+                        <p class="summary">Aktifkan bila kejadian terjadi sebelum waktu pelaporan.</p>
+                      </div>
+                    </label>
+
+                    <div class="field-grid single is-hidden" id="incidentTimeWrap">
+                      <div class="field">
+                        <div class="label-row">
+                          <label for="incidentTime">Waktu kejadian</label>
+                          <span class="helper">Opsional</span>
+                        </div>
+                        <input class="control" id="incidentTime" name="waktuKejadian" type="datetime-local" />
+                        <div class="error-text" data-error="waktuKejadian"></div>
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <div class="label-row">
+                        <label for="reportDescription">Deskripsi singkat kondisi</label>
+                        <span class="helper">Opsional</span>
+                      </div>
+                      <textarea class="textarea" id="reportDescription" name="deskripsi" placeholder="Contoh: Sampah menumpuk di tepi jalan dekat saluran air."></textarea>
+                      <div class="error-text" data-error="deskripsi"></div>
+                    </div>
+                  </div>
+                </details>
+
+                <div class="form-actions">
+                  <div class="required-copy">
+                    <strong>Wajib diisi: titik denah, kondisi sampah, jenis sampah, risiko khusus, nama pelapor, nomor telepon atau email, dan sekurang-kurangnya satu foto.</strong>
+                    <p>Deskripsi dan waktu kejadian dapat diisi apabila tersedia.</p>
+                  </div>
+                  <button class="btn btn-primary" id="submitReportBtn" type="submit">Simpan Laporan</button>
+                </div>
+                <div class="submission-feedback" id="submissionFeedback"></div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section id="recapPage" class="page" data-page="rekapitulasi">
+          <div class="section-card reveal visible">
+            <div class="page-header">
+              <div>
+                <div class="breadcrumb">Beranda / Rekapitulasi</div>
+                <h2>Rekapitulasi Area</h2>
+                <p>Rekapitulasi ini disusun dari data pelaporan yang mencakup lokasi area, titik laporan, kondisi sampah, risiko khusus, jenis sampah, dampak, waktu pelaporan, dan dokumentasi.</p>
+              </div>
+              <span class="soft-badge">Data Pelaporan</span>
+            </div>
+
+            <div class="filters-grid">
+              <input class="search-input" id="areaSearch" type="search" placeholder="Cari area atau lokasi" />
+              <select class="select" id="dateFilter">
+                <option value="all">Semua periode</option>
+                <option value="7">7 hari terakhir</option>
+                <option value="30">30 hari terakhir</option>
+              </select>
+              <select class="select" id="statusFilter">
+                <option value="all">Semua status</option>
+                <option value="green">Hijau - Aman/Terkendali</option>
+                <option value="yellow">Kuning - Perlu Perhatian</option>
+                <option value="red">Merah - Prioritas Tinggi</option>
+              </select>
+              <select class="select" id="wasteFilter">
+                <option value="all">Semua jenis sampah</option>
+                <option value="Plastik">Plastik</option>
+                <option value="Organik">Organik</option>
+                <option value="Campuran">Campuran</option>
+                <option value="B3">B3</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+              <select class="select" id="sortFilter">
+                <option value="latest-desc">Data terbaru</option>
+                <option value="reports-desc">Laporan terbanyak</option>
+                <option value="priority-desc">Prioritas tertinggi</option>
+                <option value="name-asc">Nama area A-Z</option>
+              </select>
+            </div>
+
+            <div class="metrics" id="recapMetrics"></div>
+
+            <div class="chart-grid">
+              <div class="chart-card">
+                <div class="chart-head">
+                  <div>
+                    <h3>Denah Titik Laporan</h3>
+                    <p class="summary">Denah menampilkan laporan terbaru. Warna penanda menunjukkan status dari kombinasi kondisi sampah dan risiko khusus.</p>
+                  </div>
+                  <span class="soft-badge">Denah Titik Laporan</span>
+                </div>
+                <div class="mini-map facility-map recap-facility-map" id="recapRealtimeMap">
+                  <img class="facility-map-image" src="image.png" alt="Denah area gudang dan logistik" draggable="false" />
+                </div>
+                <div class="volume-legend">
+                  <span class="soft-badge">Hijau = Aman/Terkendali</span>
+                  <span class="soft-badge">Kuning = Perlu Perhatian</span>
+                  <span class="soft-badge">Merah = Prioritas Tinggi</span>
+                </div>
+                <p class="summary" id="recapMapCaption">Belum terdapat data laporan untuk ditampilkan pada denah.</p>
+              </div>
+
+            </div>
+          </div>
+
+          <section class="section-card reveal visible" style="margin-top:18px;">
+                <div class="section-head">
+              <div>
+                <h3>Area dengan Frekuensi Laporan Tertinggi</h3>
+                <p>Daftar ini menunjukkan area yang paling sering muncul dalam laporan berdasarkan data yang tersedia.</p>
+              </div>
+            </div>
+            <div class="ranking-list" id="rankingList"></div>
+          </section>
+
+          <section class="section-card reveal visible" style="margin-top:18px;">
+            <div class="section-head">
+              <div>
+                <h3>Reward Pelapor</h3>
+                <p>Rekap pelapor paling aktif berdasarkan jumlah laporan valid yang sudah masuk ke sistem.</p>
+              </div>
+              <div class="simple-inline-actions" style="align-items:center; gap:10px;">
+                <span class="soft-badge">1 laporan valid = 1 poin</span>
+                <button class="btn btn-primary" id="downloadRewardExcelBtn" type="button">Download Excel Reward</button>
+              </div>
+            </div>
+            <div class="reward-summary" id="rewardSummary"></div>
+            <div class="reward-table-wrap">
+              <table class="reward-table" aria-label="Reward pelapor">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Nama Pelapor</th>
+                    <th>Nomor Telepon / Email</th>
+                    <th>Jumlah Pelaporan</th>
+                    <th>Jumlah Poin</th>
+                  </tr>
+                </thead>
+                <tbody id="rewardTableBody"></tbody>
+              </table>
+            </div>
+            <div class="empty-state" id="rewardEmpty" style="display:none; margin-top:14px;">Belum ada data reward yang dapat ditampilkan.</div>
+          </section>
+
+          <section class="section-card reveal visible" style="margin-top:18px;">
+            <div class="section-head">
+              <div>
+                <h3>Daftar rekap area</h3>
+                <p>Setiap area menampilkan status terkini, kondisi sampah, risiko khusus, jumlah laporan, koordinat, dan pembaruan terakhir.</p>
+              </div>
+              <span class="soft-badge">Pembaruan Otomatis setelah Pengiriman</span>
+            </div>
+            <div class="recap-list" id="recapList"></div>
+            <div class="empty-state" id="recapEmpty" style="display:none; margin-top:14px;">Tidak terdapat area yang sesuai dengan filter saat ini.</div>
+          </section>
+
+          <section class="section-card reveal visible" style="margin-top:18px;">
+            <div class="section-head">
+              <div>
+                <h3>Tren laporan 7 hari terakhir</h3>
+                <p>Tren ini disusun dari data laporan yang sesuai dengan filter aktif.</p>
+              </div>
+              <span class="soft-badge">Tren Mingguan</span>
+            </div>
+            <div class="chart">
+              <div class="bars" id="timeBars"></div>
+            </div>
+            <div class="chart-labels" id="timeBarLabels"></div>
+          </section>
+        </section>
+
+        <section id="newsPage" class="page" data-page="news">
+          <div class="section-card reveal visible">
+            <div class="page-header">
+              <div>
+                <div class="breadcrumb">Beranda / Berita</div>
+                <h2>Berita Lingkungan</h2>
+                <p>Halaman ini memuat informasi dan perkembangan terkait pengelolaan sampah.</p>
+              </div>
+            </div>
+
+            <div class="simple-toolbar-card">
+              <input class="search-input" id="newsSearch" type="search" placeholder="Cari judul atau kata kunci" />
+              <div class="news-filters" id="newsCategoryFilters"></div>
+            </div>
+
+            <div class="news-grid" id="newsGrid"></div>
+            <div class="empty-state" id="newsEmpty" style="display:none; margin-top:16px;">Berita tidak ditemukan. Ubah kata kunci atau kategori.</div>
+          </div>
+        </section>
+
+        <section id="educationPage" class="page" data-page="edukasi">
+          <div class="section-card reveal visible">
+            <div class="page-header">
+              <div>
+                <div class="breadcrumb">Beranda / Edukasi</div>
+                <h2>Informasi Edukasi Sampah</h2>
+                <p>Materi edukasi disusun secara ringkas untuk mendukung pemahaman pengelolaan sampah.</p>
+              </div>
+            </div>
+
+            <div class="simple-toolbar-card">
+              <input class="search-input" id="eduSearch" type="search" placeholder="Cari topik edukasi" />
+              <div class="edu-tabs" id="educationTabs"></div>
+            </div>
+
+            <div class="grid grid-2" id="educationGrid"></div>
+            <div class="empty-state" id="educationEmpty" style="display:none; margin-top:16px;">Materi edukasi tidak ditemukan. Ubah kata kunci atau kategori.</div>
+
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer" id="siteFooter">
+      <div class="container">
+        <div class="footer-card reveal">
+          <div class="footer-main">
+            <div class="brand">
+              <div class="brand-mark">
+                <img alt="Logo footer CollectWaste" src="logo.png" width="2000" height="1414" />
+              </div>
+              <div class="brand-copy">
+                <strong>CollectWaste</strong>
+                <span>Sistem pelaporan, pemantauan, dan edukasi kebersihan area.</span>
+              </div>
+            </div>
+            <p class="footer-note">
+              CollectWaste menyediakan sarana pencatatan laporan, pemantauan kondisi area, dan penyediaan informasi edukasi dalam satu sistem.
+            </p>
+            <div class="footer-contact">
+              <a href="mailto:hello@collectwaste.id">hello@collectwaste.id</a>
+              <a href="tel:+620000000000">+62 000 0000 0000</a>
+              <span>Senin - Jumat, 08.00 - 17.00 WIB</span>
+            </div>
+            <div class="footer-mini">
+              <span>&copy; 2026 CollectWaste</span>
+              <span>&middot;</span>
+              <span>Sistem pelaporan dan pemantauan area</span>
+            </div>
+          </div>
+          <div class="footer-grid">
+            <div class="footer-column">
+              <span class="footer-heading">Tautan Utama</span>
+              <div class="footer-list">
+                <button class="footer-link" type="button" data-go="home">Beranda</button>
+                <button class="footer-link" type="button" data-go="pelaporan">Pelaporan</button>
+                <button class="footer-link" type="button" data-go="rekapitulasi">Rekapitulasi</button>
+                <button class="footer-link" type="button" data-go="news">Berita</button>
+                <button class="footer-link" type="button" data-go="edukasi">Edukasi</button>
+              </div>
+            </div>
+            <div class="footer-column">
+              <span class="footer-heading">Informasi</span>
+              <div class="footer-list">
+                <a class="footer-link" href="mailto:hello@collectwaste.id?subject=Informasi%20CollectWaste">Informasi Produk</a>
+                <a class="footer-link" href="mailto:hello@collectwaste.id?subject=Kontak%20CollectWaste">Kontak</a>
+                <span class="footer-link footer-text">Panduan Implementasi</span>
+                <span class="footer-link footer-text">Dokumentasi Produk</span>
+              </div>
+            </div>
+            <div class="footer-column">
+              <span class="footer-heading">Media dan Kebijakan</span>
+              <div class="social-row">
+                <a href="#" aria-label="Instagram CollectWaste">Instagram</a>
+                <a href="#" aria-label="LinkedIn CollectWaste">LinkedIn</a>
+                <a href="#" aria-label="YouTube CollectWaste">YouTube</a>
+              </div>
+              <div class="footer-list">
+                <span class="footer-link footer-text">Kebijakan Privasi</span>
+                <span class="footer-link footer-text">Syarat Penggunaan</span>
+                <span class="footer-link footer-text">Kebijakan Cookie</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <div class="toast-stack" id="toastStack"></div>
+  </div>
+
+  <script src="vendor/leaflet/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
